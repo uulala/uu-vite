@@ -44,7 +44,7 @@ postRequest("https://www.wacai.com/activity/bkk-frontier/api/v2/flow/list/web?__
 function insertText() {
   navigator.permissions
     .query({
-      name: 'clipboard-read'
+      name: 'clipboard-read' as PermissionName
     })
     .then(result => {
       if (result.state == 'granted' || result.state == 'prompt') {
