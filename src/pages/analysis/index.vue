@@ -61,50 +61,57 @@ function insertText() {
 </script>
 
 <template>
-  <h1>analysis</h1>
-  <h2>请按顺序执行以下内容：</h2>
-
-  <div class="list">
-    <div>1. 点击复制按钮，复制脚本
-      <div
-        class="btn"
-        @click="copyText"
-      >复制</div>
+  <main-layout>
+    <h2>请按顺序执行以下内容：</h2>
+    <div class="list">
+      <div>1. 点击复制按钮，复制脚本
+        <div
+          class="btn"
+          @click="copyText"
+        >复制</div>
+      </div>
+      <div>2. <a
+          href="https://www.wacai.com/"
+          target="_blank"
+        >点击去记账网站</a>
+      </div>
+      <div>3. 登录网站=&gt;查看记账页面 =&gt; F12 打开控制面板 =&gt; 在console 粘贴脚本 </div>
+      <div>
+        4. 点击粘贴按钮插入数据
+        <div
+          class="btn"
+          @click="insertText"
+        >粘贴</div>
+      </div>
+      <div>
+        5. 点击分析按钮进行数据分析
+        <div class="btn">分析</div>
+      </div>
     </div>
-    <div>2. <a
-        href="https://www.wacai.com/"
-        target="_blank"
-      >点击去记账网站</a>
-    </div>
-    <div>3. 登录网站=&gt;查看记账页面 =&gt; F12 打开控制面板 =&gt; 在console 粘贴脚本 </div>
-    <div>
-      4. 点击粘贴按钮插入数据
-      <div
-        class="btn"
-        @click="insertText"
-      >粘贴</div>
-    </div>
-    <div>
-      5. 点击分析按钮进行数据分析
-      <div class="btn">分析</div>
-    </div>
-  </div>
+  </main-layout>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .read-the-docs {
   color: #888;
 }
 
-.list {}
+.list>div {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+
+}
 
 .btn {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 5px 10px;
-  border: 1px solid #eee;
+  border: 1px solid #999;
   border-radius: 5px;
-  /* width: ; */
+  margin-left: 10px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>

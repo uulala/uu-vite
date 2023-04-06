@@ -1,13 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive, onMounted, getCurrentInstance } from 'vue'
 
-defineProps<{ msg: string }>()
-// https://www.wacai.com/
-const count = ref(0)
+let message = ref(function () { })
+
+onMounted(() => {
+  message.value = getCurrentInstance()?.appContext.config.globalProperties.$message
+})
+
+function log() {
+  console.log(233)
+  message.value({ msg: 'nihao' })
+}
 </script>
 
 <template>
-  <h1>home</h1>
+  <main-layout>
+    <ss-button
+      name="home"
+      @click="log"
+    ></ss-button>
+  </main-layout>
 </template>
 
 <style scoped>
