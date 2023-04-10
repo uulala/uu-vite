@@ -1,0 +1,45 @@
+.box-start,
+.box-around,
+.box-center,
+.box-between,
+.box-item {
+  display: flex;
+  align-items: center;
+  > div {
+    padding: 5px 10px;
+  }
+}
+
+.box-center {
+  justify-content: center;
+}
+
+.box-around {
+  justify-content: space-around;
+}
+
+.box-between {
+  justify-content: space-between;
+}
+.box-item {
+  padding: 5px 10px;
+}
+
+
+
+.ss-tabs-header {
+    display: flex;
+    border-bottom: 1px solid #eee;
+}
+
+.tab-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.active {
+    color: $color-primary;
+}

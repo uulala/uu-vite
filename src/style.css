@@ -78,26 +78,3 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
-.box-start,
-.box-around,
-.box-center,
-.box-between,
-.box-item {
-  display: flex;
-  align-items: center;
-}
-
-.box-center {
-  justify-content: center;
-}
-
-.box-around {
-  justify-content: space-around;
-}
-
-.box-between {
-  justify-content: space-between;
-}
-.box-item {
-  padding: 5px 10px;
-}

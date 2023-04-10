@@ -7,7 +7,6 @@ import MainLayout from './components/layout/MainLayout.vue'
 import SsUI from './components/ss-ui/index'
 import { SsMessage } from './components/ss-ui/index'
 
-
 const app = createApp(App)
 
 app.use(router)

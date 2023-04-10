@@ -3,13 +3,16 @@ import { ref } from 'vue'
 
 const props = defineProps({
     name: String,
+    label: String,
 })
 const emits = defineEmits(['click'])
 
 </script>
 
 <template>
-    <div class="ss-button" @click="$emit('click')">{{ name }}</div>
+    <div class="ss-tabs-pane">
+        <slot></slot>
+    </div>
 </template>
 
 <style scoped>
@@ -19,6 +22,6 @@ const emits = defineEmits(['click'])
     border-radius: 5px;
     border: 1px solid #999;
     display: inline-block;
-    user-select:none;
+    user-select: none;
 }
 </style>

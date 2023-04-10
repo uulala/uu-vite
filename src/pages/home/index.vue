@@ -8,13 +8,13 @@ onMounted(() => {
 })
 
 function log() {
-  console.log(233)
-  message.value({ msg: 'nihao' })
+  message.value({ msg: 'nihao', duration: 2000, type: 'success' })
 }
 </script>
 
 <template>
-  <main-layout>
+  <main-layout >
+    <div class="read-the-docs">你好啊</div>
     <ss-button
       name="home"
       @click="log"
@@ -22,8 +22,8 @@ function log() {
   </main-layout>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .read-the-docs {
-  color: #888;
+  color: $color-primary;
 }
 </style>
