@@ -2,114 +2,110 @@
 import { ref, reactive, onMounted, getCurrentInstance } from 'vue'
 import ecahrts from '../../components/echarts/index.vue'
 import utils from '../../plugins/utils'
+interface LineOption {
+  xAxis: {
+    data: Array<String>
+  },
+  series: Array<{
+    name: String,
+    type: String,
+    data: Array<Number>
+  }>
+}
+
 defineProps<{ msg: string }>()
 
+const searchParams = reactive({ startYear: '', startMouth: '', endYear: '', endMouth: '' }),
+  activeVal = ref(''),
+  activeTab = ref('operate')
+
 let message: any = null;
-
-let showStep = ref(true),
-  lineOption = reactive({
-    title: {
-      text: 'Stacked Line'
-    },
-    tooltip: {
-      trigger: 'axis'
-    },
-    legend: {
-      data: ['收入', '支出', '结余']
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
-    toolbox: {
-      feature: {
-        saveAsImage: {}
-      }
-    },
-    xAxis: {
-      type: 'category',
-      boundaryGap: false,
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [
-      {
-        name: 'Email',
-        type: 'line',
-        stack: 'Total',
-        data: [120, 132, 101, 134, 90, 230, 210]
-      },
-      {
-        name: 'Union Ads',
-        type: 'line',
-        stack: 'Total',
-        data: [220, 182, 191, 234, 290, 330, 310]
-      },
-      {
-        name: 'Video Ads',
-        type: 'line',
-        stack: 'Total',
-        data: [150, 232, 201, 154, 190, 330, 410]
-      },
-    ]
-  }),
-  pieOption = reactive(
+const pieOption = JSON.stringify({
+  title: {
+    text: '收入汇总',
+    left: 'center'
+  },
+  tooltip: {
+    trigger: 'item'
+  },
+  legend: {
+    orient: 'vertical',
+    left: 'left'
+  },
+  series: [
     {
-      tooltip: {
-        trigger: 'item'
+      name: '收入',
+      type: 'pie',
+      radius: ['40%', '70%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: '#fff',
+        borderWidth: 2
       },
-      legend: {
-        top: '5%',
-        left: 'center'
-      },
-      series: [
-        {
-          name: 'Access From',
-          type: 'pie',
-          radius: ['40%', '70%'],
-          avoidLabelOverlap: false,
-          itemStyle: {
-            borderRadius: 10,
-            borderColor: '#fff',
-            borderWidth: 2
-          },
-          label: {
-            show: false,
-            position: 'center'
-          },
-          emphasis: {
-            label: {
-              show: true,
-              fontSize: 40,
-              fontWeight: 'bold'
-            }
-          },
-          labelLine: {
-            show: false
-          },
-          data: [
-            { value: 1048, name: 'Search Engine' },
-            { value: 735, name: 'Direct' },
-            { value: 580, name: 'Email' },
-            { value: 484, name: 'Union Ads' },
-            { value: 300, name: 'Video Ads' }
-          ]
+      data: [],
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 40,
+          fontWeight: 'bold'
         }
-      ]
+      },
     }
-  ),
-  allListItems = reactive({ data: [] })
+  ]
+})
+const lineOption: LineOption = reactive({
+  title: {
+    text: 'Stacked Line'
+  },
+  tooltip: {
+    trigger: 'axis'
+  },
+  legend: {
+    data: ['收入', '支出', '结余']
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  toolbox: {
+    feature: {
+      saveAsImage: {}
+    }
+  },
+  xAxis: {
+    type: 'category',
+    boundaryGap: false,
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series: []
+}),
+  pieOption1 = reactive(JSON.parse(pieOption)),
+  pieOption2 = reactive(JSON.parse(pieOption))
 
+pieOption2.series[0].name = '支出'
+pieOption2.title.text = '支出汇总'
+
+const yearList: Array<Number> = [], mouthList: Array<Number> = []
+const nowY = new Date().getFullYear()
+
+for (let i = 0; i < 10; i++) {
+  yearList.unshift(nowY - i)
+}
+
+for (let i = 0; i < 12; i++) {
+  mouthList.push(i + 1)
+}
 
 onMounted(() => {
   message = getCurrentInstance()?.appContext.config.globalProperties.$message
 })
 
-const count = ref(0)
 function copyText() {
   navigator.clipboard.writeText(`function postRequest(url, params) {
     var xhr = new XMLHttpRequest();
@@ -149,6 +145,7 @@ postRequest("https://www.wacai.com/activity/bkk-frontier/api/v2/flow/list/web?__
 
   message({ msg: '复制成功~', duration: 1000, type: 'success' })
 }
+
 function insertText() {
   navigator.permissions
     .query({
@@ -169,127 +166,236 @@ function insertText() {
 }
 
 function analysisData() {
-  showStep.value = false
-  const bks = localStorage.getItem('bk-ss')
-  if (!bks) return message({ msg: '请粘贴数据', duration: 1000, type: 'error' })
-  const { dailyItems } = JSON.parse(bks)
-  console.log(dailyItems)
-  dailyItems.map(item => {
-
-  })
-  allListItems.data = dailyItems
-}
-let activeTitle = ref('m')
-const tempY = [], tempM = []
-const nowY = new Date().getFullYear()
-for (let i = 0; i < 10; i++) {
-  tempY.unshift(nowY - i)
-}
-for (let i = 0; i < 12; i++) {
-  tempY.unshift(nowY - i)
+  activeTab.value = 'analysis'
+  handleChangeTime('ALL', 0)
 }
 
-let yearList = ref(tempY)
+function handleChangeTime(flag: string, item: number) {
+  activeVal.value = `${flag}-${item}`
 
-function handleChangeTime(item, flag) {
-  let time = '', start = 0, end = 0
-  if(flag === 'm'){
-     time = `${nowY}-${item}-01`
-     start = utils.getStartTime(time)
-     end = utils.getEndTime(time)
+  let startTime = 0, endTime = new Date().getTime()
+  if (flag !== 'ALL') {
+    const time = flag === 'M' ? `${nowY}-${item}-01` : `${item}-01-01`
+    startTime = utils.getStartTime(flag, time)
+    endTime = utils.getEndTime(flag, time)
   }
 
+  getPartData(startTime, endTime)
 }
+
+function handleSearch() {
+  const { startYear, startMouth, endYear, endMouth } = searchParams
+  if (!startYear) return message({ msg: '请选择开始年份', duration: 1000, type: 'error' })
+  if (!startMouth) return message({ msg: '请选择开始月份', duration: 1000, type: 'error' })
+  if (!endYear) return message({ msg: '请选择结束年份', duration: 1000, type: 'error' })
+  if (!endMouth) return message({ msg: '请选择结束月份', duration: 1000, type: 'error' })
+
+  const startTime = utils.getStartTime('M', `${startYear}-${startMouth}-1`)
+  const endTime = utils.getEndTime('M', `${endYear}-${endMouth}-1`)
+  getPartData(startTime, endTime)
+}
+
+function getPartData(startTime: number, endTime: number) {
+  const bks = localStorage.getItem('bk-ss')
+  if (!bks) return message({ msg: '请粘贴数据', duration: 1000, type: 'error' })
+  const dailyItems: Array<any> = JSON.parse(bks).dailyItems
+  dailyItems.reverse()
+
+  let temp: Array<{}> = []
+  dailyItems.map(item => {
+    if (item.date > startTime && item.date < endTime) {
+      temp.push(item)
+    }
+  })
+
+  analysisPie(temp)
+  analysisLine(temp)
+}
+
+function analysisLine(data) {
+  const d: Array<string> = [], income: Array<Number> = [], outcome: Array<Number> = [], in2out: Array<Number> = [], one = { in: 0, out: 0 }
+
+  data.map(item => {
+    const { date, flowList, incomeAmount, outgoAmount } = item
+
+    item.in1 = incomeAmount ? incomeAmount / 10000 : incomeAmount
+    item.out1 = outgoAmount ? outgoAmount / 10000 : outgoAmount
+    item.date1 = utils.formatTime(date)
+
+    const { in1, out1, date1 } = item
+    one.in += in1
+    one.out += out1
+
+    d.push(date1)
+    income.push(in1)
+    outcome.push(out1)
+    in2out.push(one.in - one.out)
+  })
+
+  lineOption.xAxis.data = d
+  lineOption.series = [{
+    name: '收入',
+    type: 'line',
+    data: income
+  }, {
+    name: '支出',
+    type: 'line',
+    data: outcome
+  }, {
+    name: '结余',
+    type: 'line',
+    data: in2out
+  },
+  ]
+}
+
+function analysisPie(data) {
+  const tempIn = [], tempOut = []
+  data.map(item => {
+    item.flowList.map(it => {
+      if (it.recType === 1) {
+        tempOut.push(it)
+      } else {
+        tempIn.push(it)
+      }
+    })
+  })
+
+  analysisByCategory(tempIn, pieOption1)
+  analysisByCategory(tempOut, pieOption2)
+}
+
+function analysisByCategory(data, option) {
+  const res = [], obj = {}
+  data.map(item => {
+    const { categoryName, categoryId, amount } = item
+    if (!obj[categoryName]) {
+      obj[categoryName] = amount
+    } else {
+      obj[categoryName] += amount
+    }
+  })
+  Object.keys(obj).map(k => {
+    res.push({ name: k, value: obj[k] })
+  })
+  option.series[0].data = res
+}
+
 </script>
 
 <template>
   <main-layout>
-    <ss-tabs v-model="activeTitle">
+    <ss-tabs v-model="activeTab">
       <ss-tab-pane
-        label="year"
-        name="y"
+        label="获取数据"
+        name="operate"
       >
-        <div class="time-wrapper box-start">
-          <div
-            v-for="item in yearList"
-            :key="item"
-            class="time-item"
-            @click="() => handleChangeTime(item, 'y')"
-          >{{ item }}</div>
+        <div class="list">
+          <div>1. 点击复制按钮，复制脚本
+            <div
+              class="btn"
+              @click="copyText"
+            >复制</div>
+          </div>
+          <div>2. <a
+              href="https://www.wacai.com/"
+              target="_blank"
+            >点击去记账网站</a>
+            => 登录网站=&gt;查看记账页面 =&gt; F12 打开控制面板 =&gt; 在console 粘贴脚本
+          </div>
+          <div>
+            3. 点击粘贴按钮插入数据
+            <div
+              class="btn"
+              @click="insertText"
+            >粘贴</div>
+          </div>
+          <div>
+            4. 点击分析按钮进行数据分析
+            <div
+              class="btn"
+              @click="analysisData"
+            >分析</div>
+          </div>
         </div>
 
       </ss-tab-pane>
-
       <ss-tab-pane
-        label="mouth"
-        name="m"
+        label="分析数据"
+        name="analysis"
       >
-        <div class="time-wrapper box-start">
-          <div
-            v-for="item in 12"
-            :key="item"
-            class="time-item"
-            @click="() => handleChangeTime(item, 'm')"
-          >{{ item }}</div>
-        </div>
+        <!-- 年，月 -->
+        <ss-tabs>
+          <ss-tab-pane
+            label="year"
+            name="y"
+          >
+            <div class="time-wrapper box-start">
+              <div
+                v-for="item in yearList"
+                :key="item"
+                :class="`time-item ${activeVal === `Y-${item}` ? 'active' : ''}`"
+                @click="() => handleChangeTime('Y', item)"
+              >{{ item }}</div>
+              <div
+                :class="`time-item ${activeVal === `ALL-0` ? 'active' : ''}`"
+                @click="() => handleChangeTime('ALL', 0)"
+              >全部</div>
+            </div>
+          </ss-tab-pane>
+
+          <ss-tab-pane
+            label="mouth"
+            name="m"
+          >
+            <div class="time-wrapper box-start">
+              <div
+                v-for="item in 12"
+                :key="item"
+                :class="`time-item ${activeVal === `M-${item}` ? 'active' : ''}`"
+                @click="() => handleChangeTime('M', item)"
+              >{{ item }}</div>
+            </div>
+          </ss-tab-pane>
+          <ss-tab-pane
+            label="other"
+            name="o"
+          >
+            <div class="box-start">
+              <ss-select
+                :dicData="yearList"
+                placeholder="开始年份"
+                v-model:modelValue="searchParams.startYear"
+              ></ss-select>
+              <ss-select
+                :dicData="mouthList"
+                placeholder="开始月份"
+                v-model:modelValue="searchParams.startMouth"
+              ></ss-select>
+              -
+              <ss-select
+                :dicData="yearList"
+                placeholder="结束年份"
+                v-model:modelValue="searchParams.endYear"
+              ></ss-select>
+              <ss-select
+                :dicData="mouthList"
+                placeholder="结束月份"
+                v-model:modelValue="searchParams.endMouth"
+              ></ss-select>
+              <ss-button @click="handleSearch">分析</ss-button>
+            </div>
+          </ss-tab-pane>
+
+        </ss-tabs>
+        <!-- 折线图 -->
+        <ecahrts :option="lineOption"></ecahrts>
+        <!-- 饼图 -->
+        <ecahrts :option="pieOption1"></ecahrts>
+        <ecahrts :option="pieOption2"></ecahrts>
       </ss-tab-pane>
     </ss-tabs>
 
-    <div class="tabs">
-      <div
-        :class="showStep ? 'active' : ''"
-        @click="showStep = true"
-      >
-        插入数据
-      </div>
-      <div
-        :class="!showStep ? 'active' : ''"
-        @click="showStep = false"
-      >分析</div>
-    </div>
-    <div v-if="showStep">
-      <div class="list">
-        <div>1. 点击复制按钮，复制脚本
-          <div
-            class="btn"
-            @click="copyText"
-          >复制</div>
-        </div>
-        <div>2. <a
-            href="https://www.wacai.com/"
-            target="_blank"
-          >点击去记账网站</a>
-          => 登录网站=&gt;查看记账页面 =&gt; F12 打开控制面板 =&gt; 在console 粘贴脚本
-        </div>
-        <div>
-          3. 点击粘贴按钮插入数据
-          <div
-            class="btn"
-            @click="insertText"
-          >粘贴</div>
-        </div>
-        <div>
-          4. 点击分析按钮进行数据分析
-          <div
-            class="btn"
-            @click="analysisData"
-          >分析</div>
-        </div>
-      </div>
-    </div>
-
-    <div v-else>
-
-      <!-- <div class="tabs">
-                                      <div class="year"></div>
-                                      <div class="mouth"></div>
-                                      <div class="other"></div>
-                                    </div> -->
-      <!-- 饼图 -->
-      <ecahrts :option="lineOption"></ecahrts>
-      <!-- 折线图 -->
-      <ecahrts :option="pieOption"></ecahrts>
-    </div>
   </main-layout>
 </template>
 
@@ -334,5 +440,9 @@ function handleChangeTime(item, flag) {
 
 .time-item {
   cursor: pointer;
+
+  &.active {
+    color: $color-primary;
+  }
 }
 </style>

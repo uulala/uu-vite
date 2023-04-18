@@ -80,7 +80,7 @@ const utils = {
             w1
         }
     },
-    formatTime(d, formatter) {
+    formatTime(d, formatter = 'YYYY-mm-dd') {
         const { Y, M, D, HH, mm, } = this.getTimePart(d)
         let temp = null
         switch (formatter) {

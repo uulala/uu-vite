@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, getCurrentInstance } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 let message = ref(function () { })
 
@@ -7,23 +8,24 @@ onMounted(() => {
   message.value = getCurrentInstance()?.appContext.config.globalProperties.$message
 })
 
-function log() {
-  message.value({ msg: 'nihao', duration: 2000, type: 'success' })
+const router = useRouter()
+const route = useRoute()
+
+function pushWithQuery() {
+  router.push({
+    path: '/analysis',
+    query: {
+      ...route.query,
+    },
+  })
 }
+
 </script>
 
 <template>
-  <main-layout >
-    <div class="read-the-docs">你好啊</div>
-    <ss-button
-      name="home"
-      @click="log"
-    ></ss-button>
+  <main-layout>
+    <ss-button @click="pushWithQuery">去分析</ss-button>
   </main-layout>
 </template>
 
-<style scoped lang="scss">
-.read-the-docs {
-  color: $color-primary;
-}
-</style>
+<style scoped lang="scss"></style>

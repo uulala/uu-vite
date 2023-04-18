@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-let showHeader = ref(true), oldScrollTop = ref(0)
+import { useRouter, useRoute } from 'vue-router'
+
+let showHeader = ref(true), oldScrollTop = ref(0), activeNav = ref('/')
+
+const route = useRoute()
+activeNav.value = route.path
 
 onMounted(() => {
     window.addEventListener('scroll', handleScroll)
@@ -28,16 +33,16 @@ function handleScroll() {
                 <div class="header-left box-start">
                     <router-link
                         to="/"
-                        class="box-item nav-item"
+                        :class="`box-item nav-item ${activeNav === '/' ? 'active' : ''}`"
                     >Home</router-link>
                     <router-link
                         to="/analysis"
-                        class="box-item  nav-item"
+                        :class="`box-item nav-item ${activeNav === '/analysis' ? 'active' : ''}`"
                     >Analysis</router-link>
                 </div>
                 <router-link
                     to="/contact"
-                    class="box-item  nav-item"
+                    :class="`box-item nav-item ${activeNav === '/contact' ? 'active' : ''}`"
                 >contact</router-link>
             </div>
         </Transition>
@@ -83,6 +88,10 @@ function handleScroll() {
 
 .nav-item {
     color: #333;
+
+    &.active {
+        color: $color-primary;
+    }
 }
 
 .main-content {
